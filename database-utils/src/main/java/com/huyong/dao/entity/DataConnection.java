@@ -1,6 +1,7 @@
 package com.huyong.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.huyong.enums.DbType;
@@ -22,5 +23,9 @@ public class DataConnection {
     private String loginUser;
 
     private String password;
+
+
+    @TableField(exist = false)
+    private String database;
 
 }
