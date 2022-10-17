@@ -20,5 +20,7 @@ public class QueryResult {
         private String name;
 
         private String label;
+
+        private String type;
     }
 }

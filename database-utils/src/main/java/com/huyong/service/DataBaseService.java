@@ -8,11 +8,14 @@ import com.huyong.bo.ExecuteSqlBody;
 import com.huyong.bo.QueryResult;
 import com.huyong.dao.entity.DataConnection;
 import com.huyong.dao.mapper.DataConnectionMapper;
+import com.huyong.manager.ConnectionProcessor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DataBaseService {
@@ -55,26 +58,54 @@ public class DataBaseService {
     }
 
     public List<ConnTree> listDbs(Long connId) {
-        ConnTree connTree = new ConnTree();
-        connTree.setConnId(1L).setConnName("test").setName("testDb").setLeaf(false).setDatabase("testDb");
+        DataConnection dataConnection = dataConnectionMapper.selectById(connId);
+        if (dataConnection == null) {
+            throw new RuntimeException("连接信息不存在");
+        }
+        return ConnectionProcessor
+                .getConnectionProcessor(dataConnection.getDbType())
+                .totalDatabases(dataConnection)
+                .stream()
+                .map(e -> new ConnTree()
+                        .setConnName(dataConnection.getName())
+                        .setConnId(dataConnection.getId())
+                        .setDatabase(e))
+                .collect(Collectors.toList());
+    }
 
-        ConnTree table = new ConnTree();
-        table.setDatabase("testDb").setConnId(1L).setLeaf(true).setName("testTable").setConnName("test");
-
-        connTree.setTables(Lists.newArrayList(table));
-        return Lists.newArrayList(connTree);
+    public List<ConnTree> listTables(Long connId, String database) {
+        DataConnection dataConnection = dataConnectionMapper.selectById(connId);
+        if (dataConnection == null) {
+            throw new RuntimeException("连接信息不存在");
+        }
+        return ConnectionProcessor
+                .getConnectionProcessor(dataConnection.getDbType())
+                .totalTables(dataConnection, database)
+                .stream()
+                .map(e -> new ConnTree()
+                        .setConnName(dataConnection.getName())
+                        .setConnId(dataConnection.getId())
+                        .setDatabase(database)
+                        .setTable(e))
+                .collect(Collectors.toList());
     }
 
     public QueryResult runSql(ExecuteSqlBody executeSqlBody) {
-        QueryResult.ResultColumn resultColumn = new QueryResult.ResultColumn();
 
-        resultColumn.setName("test").setLabel("测试");
+        if (StringUtils.isEmpty(executeSqlBody.getSql())) {
+            throw new RuntimeException("查询sql为空");
+        }
 
-        JSONObject item = new JSONObject();
-        item.put("test", "hello world");
+        DataConnection dataConnection = dataConnectionMapper.selectById(executeSqlBody.getConnId());
+        if (dataConnection == null) {
+            throw new RuntimeException("连接信息不存在");
+        }
 
-        return new QueryResult()
-                .setTableMeta(Lists.newArrayList(resultColumn))
-                .setTableData(Lists.newArrayList(item));
+
+        return ConnectionProcessor
+                .getConnectionProcessor(dataConnection.getDbType())
+                .executeSql(dataConnection, executeSqlBody.getDatabase(), executeSqlBody.getSql());
     }
+
+
 }

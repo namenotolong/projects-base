@@ -42,6 +42,11 @@ public class DataBaseController {
         return dataBaseService.listDbs(connId);
     }
 
+    @GetMapping("list-tables/{connId}/{database}")
+    public List<ConnTree> listTables(@PathVariable Long connId, @PathVariable String database) {
+        return dataBaseService.listTables(connId, database);
+    }
+
     @PostMapping("run-sql")
     public QueryResult runSql(@RequestBody ExecuteSqlBody executeSqlBody) {
         return dataBaseService.runSql(executeSqlBody);
