@@ -10,6 +10,7 @@ public enum DbType {
      */
 
     MYSQL(1, "MySQL", "com.mysql.jdbc.Driver", "jdbc:mysql://%s/%s"),
+    POSTGRESQL(2, "PostgresSQL", "org.postgresql.Driver", "jdbc:postgresql://%s/%s"),
     //ORACLE(2, "Oracle"),
     //POSTGRESQL(3, "PostgresSQL")
     ;

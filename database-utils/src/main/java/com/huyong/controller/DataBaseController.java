@@ -4,11 +4,13 @@ import com.huyong.bo.ConnTree;
 import com.huyong.bo.ExecuteSqlBody;
 import com.huyong.bo.QueryResult;
 import com.huyong.dao.entity.DataConnection;
+import com.huyong.enums.DbType;
 import com.huyong.service.DataBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/database")
@@ -50,6 +52,11 @@ public class DataBaseController {
     @PostMapping("run-sql")
     public QueryResult runSql(@RequestBody ExecuteSqlBody executeSqlBody) {
         return dataBaseService.runSql(executeSqlBody);
+    }
+
+    @GetMapping("list-types")
+    public Set<DbType> listSupportTypes() {
+        return dataBaseService.listSupportTypes();
     }
 
 }

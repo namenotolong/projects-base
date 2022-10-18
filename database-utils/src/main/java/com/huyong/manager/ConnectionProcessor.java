@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ConnectionProcessor {
@@ -32,7 +33,11 @@ public class ConnectionProcessor {
     }
 
     public static IDataConnection getConnectionProcessor(DbType dbType) {
-        return new MySQLDataConnection();
+        return cache.get(dbType);
+    }
+
+    public static Set<DbType> getRegisterTypes() {
+        return cache.keySet();
     }
 
 }

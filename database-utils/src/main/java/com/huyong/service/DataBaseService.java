@@ -8,6 +8,7 @@ import com.huyong.bo.ExecuteSqlBody;
 import com.huyong.bo.QueryResult;
 import com.huyong.dao.entity.DataConnection;
 import com.huyong.dao.mapper.DataConnectionMapper;
+import com.huyong.enums.DbType;
 import com.huyong.manager.ConnectionProcessor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,4 +110,7 @@ public class DataBaseService {
     }
 
 
+    public Set<DbType> listSupportTypes() {
+        return ConnectionProcessor.getRegisterTypes();
+    }
 }

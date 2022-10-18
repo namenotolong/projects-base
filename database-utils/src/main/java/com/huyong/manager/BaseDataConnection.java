@@ -2,7 +2,6 @@ package com.huyong.manager;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.huyong.bo.QueryResult;
 import com.huyong.dao.entity.DataConnection;
 import com.huyong.enums.DbType;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BaseDataConnection implements IDataConnection {
 
@@ -28,11 +26,9 @@ public abstract class BaseDataConnection implements IDataConnection {
 
     @Override
     public List<String> totalDatabases(DataConnection dataConnection) {
-        try {
+        try (Connection connection = DriverManager.getConnection(getJdbcUrl(dataConnection, null), dataConnection.getLoginUser(), dataConnection.getPassword())) {
             DbType dbType = dataConnection.getDbType();
             Class.forName(dbType.getDriver());
-            Connection connection = DriverManager.getConnection(getJdbcUrl(dataConnection, null), dataConnection.getLoginUser(), dataConnection.getPassword());
-
             if (null == connection) {
                 throw new RuntimeException("获取连接失败");
             }
@@ -50,10 +46,9 @@ public abstract class BaseDataConnection implements IDataConnection {
 
     @Override
     public List<String> totalTables(DataConnection dataConnection, String database) {
-        try {
+        try (Connection connection = DriverManager.getConnection(getJdbcUrl(dataConnection, database), dataConnection.getLoginUser(), dataConnection.getPassword())) {
             DbType dbType = dataConnection.getDbType();
             Class.forName(dbType.getDriver());
-            Connection connection = DriverManager.getConnection(getJdbcUrl(dataConnection, database), dataConnection.getLoginUser(), dataConnection.getPassword());
 
             if (null == connection) {
                 return null;
@@ -80,10 +75,9 @@ public abstract class BaseDataConnection implements IDataConnection {
     }
 
     public QueryResult executeSql(DataConnection dataConnection, String database, String sql) {
-        try {
+        try (Connection connection = DriverManager.getConnection(getJdbcUrl(dataConnection, database), dataConnection.getLoginUser(), dataConnection.getPassword())) {
             DbType dbType = dataConnection.getDbType();
             Class.forName(dbType.getDriver());
-            Connection connection = DriverManager.getConnection(getJdbcUrl(dataConnection, database), dataConnection.getLoginUser(), dataConnection.getPassword());
 
             if (null == connection) {
                 throw new RuntimeException("获取连接失败");
@@ -130,8 +124,4 @@ public abstract class BaseDataConnection implements IDataConnection {
         }
     }
 
-    @Override
-    public DbType supportType() {
-        return DbType.MYSQL;
-    }
 }
