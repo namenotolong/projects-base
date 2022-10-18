@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huyong.dao.mapper.DataConnectionMapper">
+
+    <update id="init">
+
+        CREATE TABLE IF NOT EXISTS data_connection
+        (
+        id BIGINT(20) NOT NULL auto_increment COMMENT '主键ID',
+        name VARCHAR(30) NULL DEFAULT NULL COMMENT '名称',
+        db_type INT(11) NULL DEFAULT NULL COMMENT '数据库类型',
+        host VARCHAR(50) NULL DEFAULT NULL COMMENT '主机',
+        login_user VARCHAR(50) NULL DEFAULT NULL COMMENT '用户',
+        password VARCHAR(50) NULL DEFAULT NULL COMMENT '密码',
+        PRIMARY KEY (id)
+        );
+
+
+    </update>
+</mapper>

@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS data_connection;
-CREATE TABLE data_connection
+CREATE TABLE IF NOT EXISTS data_connection
 (
     id BIGINT(20) NOT NULL auto_increment COMMENT '主键ID',
     name VARCHAR(30) NULL DEFAULT NULL COMMENT '名称',
