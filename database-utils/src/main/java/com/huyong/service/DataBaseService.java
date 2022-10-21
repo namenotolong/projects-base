@@ -1,11 +1,10 @@
 package com.huyong.service;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.Lists;
 import com.huyong.bo.ConnTree;
 import com.huyong.bo.ExecuteSqlBody;
 import com.huyong.bo.QueryResult;
+import com.huyong.bo.Table;
 import com.huyong.dao.entity.DataConnection;
 import com.huyong.dao.mapper.DataConnectionMapper;
 import com.huyong.enums.DbType;
@@ -112,5 +111,15 @@ public class DataBaseService {
 
     public Set<DbType> listSupportTypes() {
         return ConnectionProcessor.getRegisterTypes();
+    }
+
+    public Table tableDetail(Long connId, String database, String tableName) {
+        DataConnection dataConnection = dataConnectionMapper.selectById(connId);
+        if (dataConnection == null) {
+            throw new RuntimeException("连接信息不存在");
+        }
+        return ConnectionProcessor
+                .getConnectionProcessor(dataConnection.getDbType())
+                .getTableInfo(dataConnection, database, tableName);
     }
 }

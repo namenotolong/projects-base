@@ -17,6 +17,11 @@ public class PostgresDataConnection extends BaseDataConnection {
     private static final String DATABASE_SQL = "SELECT datname FROM pg_catalog.pg_database";
     @Override
     public DbType supportType() {
+        try {
+            Class.forName(DbType.POSTGRESQL.getDriver());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return DbType.POSTGRESQL;
     }
 

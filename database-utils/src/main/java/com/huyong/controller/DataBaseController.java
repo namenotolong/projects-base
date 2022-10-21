@@ -3,6 +3,7 @@ package com.huyong.controller;
 import com.huyong.bo.ConnTree;
 import com.huyong.bo.ExecuteSqlBody;
 import com.huyong.bo.QueryResult;
+import com.huyong.bo.Table;
 import com.huyong.dao.entity.DataConnection;
 import com.huyong.enums.DbType;
 import com.huyong.service.DataBaseService;
@@ -57,6 +58,11 @@ public class DataBaseController {
     @GetMapping("list-types")
     public Set<DbType> listSupportTypes() {
         return dataBaseService.listSupportTypes();
+    }
+
+    @GetMapping("detail-table/{connId}/{database}/{tableName}")
+    public Table tableDetail(@PathVariable Long connId, @PathVariable String database, @PathVariable String tableName) {
+        return dataBaseService.tableDetail(connId, database, tableName);
     }
 
 }
