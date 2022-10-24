@@ -158,7 +158,13 @@ public abstract class BaseDataConnection implements IDataConnection {
     }
 
     protected String preProcessSql(String sql) {
+        if (StringUtils.isEmpty(sql)) {
+            return sql;
+        }
         sql = sql.trim();
+        if (!sql.toLowerCase().startsWith("select")) {
+            return sql;
+        }
         if (sql.contains("limit") || sql.contains("LIMIT")) {
             return sql;
         }
